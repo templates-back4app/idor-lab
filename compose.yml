@@ -1,0 +1,16 @@
+# One backend with two companies and two people in it. Rows arrive the way a
+# generated app writes them: with no per-row access list of any kind.
+services:
+  mongo:
+    image: mongo:7
+    command: ["--quiet"]
+  parse:
+    image: parseplatform/parse-server:7.4.0
+    depends_on: [mongo]
+    ports: ["1342:1337"]
+    environment:
+      PARSE_SERVER_APPLICATION_ID: idor
+      PARSE_SERVER_MASTER_KEY: idor-master-key
+      PARSE_SERVER_DATABASE_URI: mongodb://mongo:27017/dev
+      PARSE_SERVER_ALLOW_CLIENT_CLASS_CREATION: "${PARSE_SERVER_ALLOW_CLIENT_CLASS_CREATION:-true}"
+      PARSE_SERVER_MASTER_KEY_IPS: "0.0.0.0/0,::/0"
